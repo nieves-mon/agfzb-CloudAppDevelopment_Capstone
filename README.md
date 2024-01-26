@@ -1,3 +1,5 @@
+# Link to Final Project: https://montoyanieve-8000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/djangoapp/
+
 # Final Project Template
 
 The final project for this course has several steps that you must complete. 
