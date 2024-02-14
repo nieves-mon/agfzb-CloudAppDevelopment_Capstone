@@ -8,7 +8,6 @@ from django.utils.timezone import now
 class CarMake(models.Model):
     name = models.CharField(null=False, max_length=30, default='ford')
     description = models.CharField(max_length=500)
-    dob = models.DateField(null=True)
     
     # Create a toString method for object string representation
     def __str__(self):
@@ -18,7 +17,7 @@ class CarMake(models.Model):
 class CarModel(models.Model):
     name = models.CharField(null=False, max_length=30, default="")
     dealer_id = models.IntegerField(null=False)
-    type_c = models.CharField(null=False, max_length=9, choices=(('Sedan', 'Sedan',), ('SUV', 'SUV'), ('HATCHBACK', 'HATCHBACK'),('WAGON', 'WAGON')))
+    type = models.CharField(null=False, max_length=9, choices=(('Sedan', 'Sedan',), ('SUV', 'SUV'), ('HATCHBACK', 'HATCHBACK'),('WAGON', 'WAGON')))
     year = models.DateField(null=False)
     car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
 
