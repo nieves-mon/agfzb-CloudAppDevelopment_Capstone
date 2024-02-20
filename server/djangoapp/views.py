@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-# from .restapis import related methods
+from .restapis import get_dealers_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -59,42 +59,47 @@ def logout_request(request):
 # Create a `registration_request` view to handle sign up request
 def registration_request(request):
 	
-    context = {}
-    # If it is a GET request, just render the registration page
-    if request.method == 'GET':
-        return render(request, 'djangoapp/registration.html', context)
-    # If it is a POST request
-    elif request.method == 'POST':
+	context = {}
+	# If it is a GET request, just render the registration page
+	if request.method == 'GET':
+		return render(request, 'djangoapp/registration.html', context)
+	# If it is a POST request
+	elif request.method == 'POST':
 
-        username = request.POST['username']
-        password = request.POST['psw']
-        first_name = request.POST['firstname']
-        last_name = request.POST['lastname']
-        user_exist = False
+		username = request.POST['username']
+		password = request.POST['psw']
+		first_name = request.POST['firstname']
+		last_name = request.POST['lastname']
+		user_exist = False
 
-        try:
-            # Check if user already exists
-            User.objects.get(username=username)
-            user_exist = True
-        except:
-            # If not, simply log this is a new user
-            logger.debug("{} is new user".format(username))
-        # If it is a new user
-        if not user_exist:
-            # Create user in auth_user table
-            user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password)
-            # <HINT> Login the user and 
-            # redirect to course list page
-            return render(request, 'djangoapp/index.html', context)
-        else:
-            return render(request, 'djangoapp/index.html', context)
+		try:
+			# Check if user already exists
+			User.objects.get(username=username)
+			user_exist = True
+		except:
+			# If not, simply log this is a new user
+			logger.debug("{} is new user".format(username))
+		# If it is a new user
+		if not user_exist:
+			# Create user in auth_user table
+			user = User.objects.create_user(username=username, first_name=first_name, last_name=last_name, password=password)
+			# <HINT> Login the user and 
+			# redirect to course list page
+			return render(request, 'djangoapp/index.html', context)
+		else:
+			return render(request, 'djangoapp/index.html', context)
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
 	context = {}
 	if request.method == "GET":
-		return render(request, 'djangoapp/index.html', context)
-
+		url = "https://montoyanieve-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get"
+		# Get dealers from the URL
+		dealerships = get_dealers_from_cf(url)
+		# Concat all dealer's short name
+		dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+		# Return a list of dealer short name
+		return HttpResponse(dealer_names)
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 # def get_dealer_details(request, dealer_id):
