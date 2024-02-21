@@ -13,7 +13,7 @@
 				<div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
 					<ul class="navbar-nav">
 						<li class="nav-item">
-							<a class="nav-link active" aria-current="page" href="#">Home</a>
+							<a class="nav-link" aria-current="page" href="../../">Home</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="./about">About Us</a>
@@ -56,11 +56,14 @@
 
 		<!-- Add reviews as cards -->
 		{% if reviews|length > 0 %}
-			<div class="card-columns">
+			<div class='d-flex justify-content-center align-items-center'>
+				<h1>Reviews for {{dealer.full_name}}</h1>
+			</div>
+			<div class="card-columns mx-3">
 				{% for review in reviews %}
 					<div class="card text-dark bg-light mb-3 text-left">
 						<div class="card-header">{{review.name}}</div>
-						<img src="{{MEDIA_URL}}/emoji/{{review.sentiment}}.png" class="card-img-left">
+						<img src="{{MEDIA_URL}}/emoji/{{review.sentiment}}.png" class="card-img-left w-25">
 						<div class="card-body">
 							<h5 class="card-title">{{ review.car_make }}, {{ review.car_model }}</h5>
 							<h5 class="card-title">{{ review.car_year }}</h5>
@@ -71,7 +74,7 @@
 			</div>
 		{% else %}
 			<div class='d-flex justify-content-center align-items-center'>
-				<h1 class='text-center'>This dealership has no reviews</h1>
+				<h1 class='text-center'>{{dealer.name}} has no reviews</h1>
 			</div>
 		{% endif %}
 	</body>
