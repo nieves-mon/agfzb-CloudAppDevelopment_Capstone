@@ -108,6 +108,7 @@ def get_dealer_details(request, dealer_id):
 		url_ds = f"https://montoyanieve-3000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/dealerships/get?id={dealer_id}"
 		# Get dealers from the URL
 		print(get_dealer_reviews_from_cf(url_r, dealer_id))
+		print(get_dealers_from_cf(url_ds))
 		context = {
 			"dealer": get_dealers_from_cf(url_ds)[0],
 			"reviews": get_dealer_reviews_from_cf(url_r, dealer_id),

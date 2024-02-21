@@ -10,7 +10,8 @@ def get_request(url, **kwargs):
 	print("GET from {} ".format(url))
 	try:
 		# Call get method of requests library with URL and parameters
-		response = requests.get(url, params=params, headers={'Content-Type': 'application/json'})
+		response = requests.get(
+			url, headers={'Content-Type': 'application/json'}, params=kwargs)
 		status_code = response.status_code
 		print("With status {} ".format(status_code))
 		json_data = json.loads(response.text)
@@ -31,6 +32,7 @@ def get_dealers_from_cf(url, **kwargs):
 	results = []
 	# Call get_request with a URL parameter
 	json_result = get_request(url)
+	print(json_result)
 	if json_result:
 		# Get the row list in JSON as dealers
 		dealers = json_result
@@ -55,6 +57,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
 	results = []
 	# Call get_request with a URL parameter
 	reviews = get_request(url)
+	print(reviews)
 
 	if reviews:
 		# For each dealer object
