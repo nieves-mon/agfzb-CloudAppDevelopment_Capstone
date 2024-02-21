@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
-# from .models import related models
+from .models import CarModel
 from .restapis import get_dealers_from_cf, get_dealer_reviews_from_cf
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -116,6 +116,32 @@ def get_dealer_details(request, dealer_id):
 		return render(request, 'djangoapp/dealer_details.html', context)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
-
+def add_review(request, dealer_id):
+	if request.method == "GET":
+		url = f"https://montoyanieve-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/get_reviews?id={dealer_id}"
+		# Get dealers from the URL
+		context = {
+				"cars": CarModel.objects.all(),
+				"dealer": get_dealers_from_cf(url)[0],
+		}
+		print(context)
+		return render(request, 'djangoapp/add_review.html', context)
+	if request.method == "POST":
+		form = request.POST
+		review = {
+			"name": f"{request.user.first_name} {request.user.last_name}",
+			"dealership": dealer_id,
+			"review": form["content"],
+			"purchase": form.get("purchasecheck"),
+			}
+		if form.get("purchasecheck"):
+			review["purchasedate"] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
+			car = CarModel.objects.get(pk=form["car"])
+			review["car_make"] = car.car_make.name
+			review["car_model"] = car.name
+			review["car_year"]= car.year.strftime("%Y")
+		json_payload = {"review": review}
+		URL = 'https://montoyanieve-5000.theiadockernext-1-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai/api/post_review'
+		post_request(URL, json_payload, dealerId=dealer_id)
+	return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+	
